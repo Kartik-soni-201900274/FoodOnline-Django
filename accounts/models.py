@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
+from django.db.models.fields.related import ForeignKey, OneToOneField
+
+
 # Create your models here.
 
 
@@ -49,8 +52,8 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
     objects = UserManager()
 
@@ -62,3 +65,29 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+
+class UserProfile(models.Model):
+    user = OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    profile_picture = models.ImageField(
+        upload_to="users/profile_pictures", blank=True, null=True
+    )
+    cover_photo = models.ImageField(
+        upload_to="users/cover_photos", blank=True, null=True
+    )
+    address = models.CharField(max_length=250, blank=True, null=True)
+    country = models.CharField(max_length=15, blank=True, null=True)
+    state = models.CharField(max_length=15, blank=True, null=True)
+    city = models.CharField(max_length=15, blank=True, null=True)
+    pin_code = models.CharField(max_length=6, blank=True, null=True)
+    latitude = models.CharField(max_length=20, blank=True, null=True)
+    longitude = models.CharField(max_length=20, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    # def full_address(self):
+    #     return f'{self.address_line_1}, {self.address_line_2}'
+
+    def __str__(self):
+        return self.user.email
+
