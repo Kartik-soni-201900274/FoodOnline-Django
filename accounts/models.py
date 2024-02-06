@@ -41,16 +41,29 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    VENDOR = 1
+    CUSTOMER = 2
+
+    ROLE_CHOICE = (
+        (VENDOR, "Vendor"),
+        (CUSTOMER, "Customer"),
+    )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
+    phone_number = models.CharField(max_length=12, blank=True)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICE, blank=True, null=True)
+
+    # required fields
     date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(auto_now=True)
+    last_login = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+    is_superadmin = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
@@ -65,6 +78,13 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+    def get_role(self):
+        if self.role == 1:
+            user_role = "Vendor"
+        elif self.role == 2:
+            user_role = "Customer"
+        return user_role
 
 
 class UserProfile(models.Model):
@@ -91,3 +111,5 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.email
 
+
+   
