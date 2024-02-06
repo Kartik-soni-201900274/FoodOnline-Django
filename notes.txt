@@ -1,0 +1,38 @@
+
+
+### Django Context and Request Objects
+
+In Django, the context for a template contains variables that can be accessed within the template. By default, Django's context processors add certain variables to this context automatically. Here's a summary of these default context processors:
+
+- `django.template.context_processors.debug`: Adds a boolean debug variable to the context, indicating whether DEBUG setting is True and the client's IP is in INTERNAL_IPS setting.
+- `django.template.context_processors.request`: Adds the request object to the context, representing the current HTTP request being processed.
+- `django.template.context_processors.auth`: Adds a user variable to the context, representing the currently logged-in user (or an AnonymousUser instance if no user is logged in). Also adds a perms variable for checking user permissions.
+- `django.template.context_processors.messages`: Adds a messages variable to the context for one-time notifications.
+- `django.template.context_processors.media`: Adds a MEDIA_URL variable to the context, representing the MEDIA_URL setting.
+- `django.template.context_processors.static`: Adds a STATIC_URL variable to the context, representing the STATIC_URL setting.
+- `django.template.context_processors.tz`: Adds a TIME_ZONE variable to the context, representing the TIME_ZONE setting.
+- `django.template.context_processors.i18n`: Adds variables related to internationalization, including LANGUAGE_CODE, LANGUAGE_BIDI, and LANGUAGES.
+- `django.template.context_processors.csrf`: Adds a csrf_token variable to the context for cross-site request forgery protection.
+
+### Request Object Attributes
+
+Here's a summary of commonly used attributes of the request object:
+
+- `request.method`: Represents the HTTP method used in the request (e.g., 'GET', 'POST').
+- `request.GET`: Contains all available GET parameters.
+- `request.POST`: Contains all available POST parameters.
+- `request.FILES`: Contains all available uploaded files.
+- `request.user`: Represents the currently logged-in user (or an instance of AnonymousUser if no user is logged in).
+- `request.session`: Allows storing and retrieving arbitrary data on a per-site-visitor basis.
+- `request.COOKIES`: Contains all available cookies.
+- `request.META`: Contains all available HTTP headers.
+- `request.path`: Represents the full path to the requested page.
+- `request.path_info`: Represents the client-side path of the URL.
+- `request.scheme`: Represents the scheme of the request (e.g., 'http' or 'https').
+
+### Authentication Middleware
+
+The AuthenticationMiddleware attaches the user object to every incoming request before it reaches the view, representing the currently logged-in user. If no user is logged in, this will be an instance of AnonymousUser. The auth context processor then adds the user object to the template context data before rendering the template.
+
+---
+
