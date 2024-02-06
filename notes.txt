@@ -32,7 +32,8 @@ Here's a summary of commonly used attributes of the request object:
 
 ### Authentication Middleware
 
-The AuthenticationMiddleware attaches the user object to every incoming request before it reaches the view, representing the currently logged-in user. If no user is logged in, this will be an instance of AnonymousUser. The auth context processor then adds the user object to the template context data before rendering the template.
+The AuthenticationMiddleware attaches the user object to every incoming request before it reaches the view, representing the currently logged-in user. If no user is logged in, this will be an instance of AnonymousUser.
+ The auth context processor then adds the user object to the template context data before rendering the template.
 
 ---
 
