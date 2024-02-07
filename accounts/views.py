@@ -218,3 +218,50 @@ def vendorDashboard(request):
     #     "current_month_revenue": current_month_revenue,
     # }
     return render(request, "accounts/vendorDashboard.html")
+
+
+def reset_password_validate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.info(request, 'Please reset your password')
+        return redirect('reset_password')
+    else:
+        messages.error(request, 'This link has been expired!')
+        return redirect('myAccount')
+
+
+def reset_password(request):
+    uid = request.session.get('uid')
+    if request.POST:
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        if password == confirm_password:
+            user = User.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'Password reset successful')
+            return redirect('login')
+        else:
+            messages.error(request, 'Password do not match')
+            return redirect('reset_password')
+    return render(request, "accounts/reset_password.html")
+
+def forgot_password(request):
+    if request.POST:
+        email = request.POST["email"]
+        user = User.objects.filter(email=email)
+        if user.exists():
+            mail_subject = "Reset your password"
+            email_template = "accounts/emails/reset_password_email.html"
+            send_verification_email(request, user, mail_subject, email_template)
+            messages.success(request, "We have sent you an email to reset your password.")
+            return redirect("login")
+        else:
+            messages.error(request, "This email does not exist.")
+            return redirect("forgot_password")
+    return render(request, "accounts/forgot_password.html")
