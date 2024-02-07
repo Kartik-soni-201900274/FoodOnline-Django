@@ -13,6 +13,32 @@ In Django, the context for a template contains variables that can be accessed wi
 - `django.template.context_processors.tz`: Adds a TIME_ZONE variable to the context, representing the TIME_ZONE setting.
 - `django.template.context_processors.i18n`: Adds variables related to internationalization, including LANGUAGE_CODE, LANGUAGE_BIDI, and LANGUAGES.
 - `django.template.context_processors.csrf`: Adds a csrf_token variable to the context for cross-site request forgery protection.
+DJANGO AUTH CONTEXT PROCESSOR
+When a request is made, Django's AuthenticationMiddleware retrieves the user's ID and authentication backend from the session. It uses this information to get the user object, which represents the currently logged-in user. If no user is logged in, this will be an instance of AnonymousUser.
+
+The AuthenticationMiddleware attaches the user object to the request as request.user.
+
+When a template is rendered, Django's context processors add certain variables to the template's context. The auth context processor adds the user variable, which is just request.user, and the perms variable, which is an instance of django.contrib.auth.context_processors.PermWrapper. This allows you to check the user's permissions in the template.
+
+In the template, you can access these variables like any other variable. For example, you can use {{ user.username }} to display the user's username, or {% if perms.foo.can_do_something %} to check if the user has a certain permission.
+
+---
+When all the default context processors in Django are applied, the context for a template might look something like this:
+{
+    'debug': True,  # from django.template.context_processors.debug
+    'request': <HttpRequest>,  # from django.template.context_processors.request
+    'user': <User>,  # from django.template.context_processors.auth
+    'perms': <django.contrib.auth.context_processors.PermWrapper>,  # from django.template.context_processors.auth
+    'messages': <django.contrib.messages.storage.fallback.FallbackStorage object at 0x7f8e5f4a3d30>,  # from django.template.context_processors.messages
+    'MEDIA_URL': '/media/',  # from django.template.context_processors.media
+    'STATIC_URL': '/static/',  # from django.template.context_processors.static
+    'TIME_ZONE': 'UTC',  # from django.template.context_processors.tz
+    'LANGUAGE_CODE': 'en-us',  # from django.template.context_processors.i18n
+    'LANGUAGE_BIDI': False,  # from django.template.context_processors.i18n
+    'LANGUAGES': [('af', 'Afrikaans'), ('ar', 'Arabic'), ('ast', 'Asturian'), ...],  # from django.template.context_processors.i18n
+    'csrf_token': <django.utils.functional.lazy.<locals>.__proxy__ object at 0x7f8e5f4a3d60>,  # from django.template.context_processors.csrf
+    # ... other context data ...
+}
 
 ### Request Object Attributes
 
@@ -36,4 +62,19 @@ The AuthenticationMiddleware attaches the user object to every incoming request 
  The auth context processor then adds the user object to the template context data before rendering the template.
 
 ---
+DJANGO LOGIN FUNCTION
 
+When you call auth.login(request, user) in Django, it stores the user's ID and the authentication backend's path in the session. However, these are not stored directly under the session's user key. Instead, they're stored under a key that's based on the authentication backend's path.
+{
+    '_auth_user_id': '1',
+    '_auth_user_backend': 'django.contrib.auth.backends.ModelBackend',
+    '_auth_user_hash': '3d72a4a8a12eac747878722ccc1e4381',
+    # ... other session data ...
+}
+In this example, _auth_user_id is the ID of the logged-in user, _auth_user_backend is the path to the authentication backend that was used to authenticate the user, and _auth_user_hash is the hashed version of the user's password.
+
+Django uses this information to automatically authenticate the user on subsequent requests. The AuthenticationMiddleware retrieves the user ID and backend from the session, uses the backend to get the user object, and then attaches the user object to the request as request.user.
+
+Remember that this data is stored in the session, which is usually stored in a cookie on the client's browser. This means that it's sent back to the server with every request, allowing Django to identify the user.
+
+DJANGO AUTH CONTEXT PROCESSOR
