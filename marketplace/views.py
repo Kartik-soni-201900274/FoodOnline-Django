@@ -4,6 +4,7 @@ from marketplace.context_processors import get_cart_counter
 from marketplace.models import Cart
 from menu.models import Category, FoodItem
 from django.db.models import Prefetch
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from vendor.models import Vendor
 
@@ -55,6 +56,16 @@ def add_to_cart(request, food_id):
                         {
                             "status": "Success",
                             "message": "Increased the cart quantity",
+                            "cart_counter": get_cart_counter(request),
+                            "qty": cart.quantity,
+                            "cart_amount": 200,
+                        }
+                    )
+                else:
+                    return JsonResponse(
+                        {
+                            "status": "Success",
+                            "message": "Item added to cart",
                             "cart_counter": get_cart_counter(request),
                             "qty": cart.quantity,
                             "cart_amount": 200,
@@ -112,3 +123,39 @@ def decrease_cart(request, food_id):
         return JsonResponse(
             {"status": "login_required", "message": "Please login to continue"}
         )
+
+
+@login_required(login_url="login")
+def cart(request):
+    cart_items = Cart.objects.filter(user=request.user).order_by("created_at")
+    context = {
+        "cart_items": cart_items,
+    }
+    return render(request, "marketplace/cart.html", context)
+
+
+def delete_cart(request, cart_id):
+    print(cart_id)
+    if request.user.is_authenticated:
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            try:
+                cart_item = Cart.objects.get(id=cart_id)
+                cart_item.delete()
+                return JsonResponse(
+                    {
+                        "status": "Success",
+                        "message": "Item removed from cart",
+                        "cart_counter": get_cart_counter(request),
+                    }
+                )
+            except:
+                return JsonResponse(
+                    {"status": "Failed", "message": "Item not found in cart"}
+                )
+        else:
+            return JsonResponse({"status": "Failed", "message": "Invalid request"})
+    else:
+        return JsonResponse(
+            {"status": "Failed", "message": "You need to login to remove from cart"}
+        )
+
