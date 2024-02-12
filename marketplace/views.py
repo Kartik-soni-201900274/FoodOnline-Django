@@ -1,7 +1,7 @@
 from datetime import date
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from marketplace.context_processors import get_cart_counter
+from marketplace.context_processors import get_cart_amounts, get_cart_counter
 from marketplace.models import Cart
 from menu.models import Category, FoodItem
 from django.db.models import Prefetch
@@ -70,7 +70,7 @@ def add_to_cart(request, food_id):
                             "message": "Increased the cart quantity",
                             "cart_counter": get_cart_counter(request),
                             "qty": cart.quantity,
-                            "cart_amount": 200,
+                            "cart_amount": get_cart_amounts(request),
                         }
                     )
                 else:
@@ -80,7 +80,7 @@ def add_to_cart(request, food_id):
                             "message": "Item added to cart",
                             "cart_counter": get_cart_counter(request),
                             "qty": cart.quantity,
-                            "cart_amount": 200,
+                            "cart_amount": get_cart_amounts(request),
                         }
                     )
             except:
@@ -114,7 +114,7 @@ def decrease_cart(request, food_id):
                             "status": "Success",
                             "cart_counter": get_cart_counter(request),
                             "qty": chkCart.quantity,
-                            "cart_amount": 200,
+                            "cart_amount": get_cart_amounts(request),
                         }
                     )
                 except:
@@ -158,6 +158,7 @@ def delete_cart(request, cart_id):
                         "status": "Success",
                         "message": "Item removed from cart",
                         "cart_counter": get_cart_counter(request),
+                        "cart_amount": get_cart_amounts(request),
                     }
                 )
             except:
