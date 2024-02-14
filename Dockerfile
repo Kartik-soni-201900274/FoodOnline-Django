@@ -1,5 +1,4 @@
-FROM python:3.8
-
+FROM python:3.10-slim-bullseye
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -19,5 +18,3 @@ RUN python manage.py collectstatic --noinput
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
-# Run app.py when the container launches
-CMD python manage.py migrate && python manage.py runserver 0.0.0.0:8000

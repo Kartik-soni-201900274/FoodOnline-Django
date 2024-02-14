@@ -90,7 +90,7 @@ DATABASES = {
         "NAME": config("POSTGRES_DB"),
         "USER": config("POSTGRES_USER"),
         "PASSWORD": config("POSTGRES_PASSWORD"),
-        "HOST": "localhost",
+        "HOST": config("POSTGRES_HOST","localhost"),
         
     }
 }
@@ -134,7 +134,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "foodOnline_main/static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "foodonline_main/static")]
 
 # Media Files Config
 MEDIA_URL = "/media/"
