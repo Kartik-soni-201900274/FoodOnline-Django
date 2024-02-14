@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - foodonline-psql-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 1s
@@ -26,3 +26,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+volumes:
+  foodonline-psql-data: null
