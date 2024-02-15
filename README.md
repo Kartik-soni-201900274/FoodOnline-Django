@@ -3,6 +3,11 @@
 
 A web app that allows users to browse menus, place orders, and track deliveries from a variety of restaurants, providing a convenient and efficient way to order food online and have it delivered to their doorstep.
 
+## Tech Stack
+
+**Client:** Html, CSS, Javascript
+
+**Server:** Python, Django
 ## Run Locally
 
 Clone the project
