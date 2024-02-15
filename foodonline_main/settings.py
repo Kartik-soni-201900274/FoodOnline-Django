@@ -27,7 +27,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "menu",
     "marketplace",
     "customers",
+    "orders",
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,7 @@ TEMPLATES = [
                 "accounts.context_processors.get_user_profile",
                 "marketplace.context_processors.get_cart_counter",
                 "marketplace.context_processors.get_cart_amounts",
+                "accounts.context_processors.get_paypal_client_id",
             ],
         },
     },
@@ -91,8 +93,7 @@ DATABASES = {
         "NAME": config("POSTGRES_DB"),
         "USER": config("POSTGRES_USER"),
         "PASSWORD": config("POSTGRES_PASSWORD"),
-        "HOST": config("POSTGRES_HOST","localhost"),
-        
+        "HOST": config("POSTGRES_HOST", "localhost"),
     }
 }
 
@@ -153,3 +154,7 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "foodOnline Marketplace <django.foodonline@gmail.com>"
+
+PAYPAL_CLIENT_ID = config("PAYPAL_CLIENT_ID")
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
