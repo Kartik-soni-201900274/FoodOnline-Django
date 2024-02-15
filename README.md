@@ -77,11 +77,11 @@ Run Migrations
 
 ## Screenshots
 
-![App Screenshot](<img width="1440" alt="image" src="https://github.com/Kartik-soni-201900274/FoodOnline-Django/assets/91082323/579be862-00f9-4a30-9159-ee5385d30a62">
-)
+ <img width="1440" alt="image" src="https://github.com/Kartik-soni-201900274/FoodOnline-Django/assets/91082323/579be862-00f9-4a30-9159-ee5385d30a62"> 
 
-![App Screenshot]()
+<img width="1440" alt="image" src="https://github.com/Kartik-soni-201900274/FoodOnline-Django/assets/91082323/12e67edd-0975-4a84-804b-f67d6d0563fb">
 
-![App Screenshot]()
+<img width="1437" alt="image" src="https://github.com/Kartik-soni-201900274/FoodOnline-Django/assets/91082323/8d70b6ef-fda2-4029-b726-535e7606b5b8">
+<img width="1440" alt="image" src="https://github.com/Kartik-soni-201900274/FoodOnline-Django/assets/91082323/7465672f-1f7f-4410-9391-0d89379d151e">
 
-![App Screenshot]()
+
